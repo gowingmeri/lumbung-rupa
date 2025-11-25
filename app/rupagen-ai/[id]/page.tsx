@@ -11,6 +11,7 @@ import {
 import { ChatMessage } from '@/types/rupagen';
 import ChatSidebar from '@/components/ChatSidebar';
 import { Send, ArrowLeft } from 'lucide-react';
+import { Icon } from '@iconify/react';
 
 export default function ChatPage() {
   const params = useParams();
@@ -133,8 +134,8 @@ export default function ChatPage() {
               <ArrowLeft size={20} className="text-gray-700" />
             </button>
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
-                <span className="text-xl">🤖</span>
+              <div className="w-10 h-10 rounded-full flex items-center justify-center">
+                <Icon icon="mingcute:ai-fill" className="w-20 h-20 text-xl text-primary" />
               </div>
               <div>
                 <h1 className="text-lg font-semibold text-gray-900">RupaGen AI</h1>
@@ -165,8 +166,8 @@ export default function ChatPage() {
               </div>
             ) : messages.length === 0 ? (
               <div className="text-center py-12">
-                <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-5xl">🤖</span>
+                <div className="w-32 h-32 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Icon icon="mingcute:ai-fill" className="text-6xl text-primary w-44 h-44" />
                 </div>
                 <h2 className="text-2xl font-semibold text-gray-900 mb-2">
                   Mulai Percakapan
@@ -184,7 +185,7 @@ export default function ChatPage() {
                     <button
                       key={idx}
                       onClick={() => setInputMessage(suggestion)}
-                      className="p-4 bg-white border border-gray-200 rounded-xl hover:border-primary hover:bg-primary/5 transition-all text-sm text-gray-700 hover:text-primary"
+                      className="p-5 border border-black/15 rounded-full hover:border-primary hover:bg-primary/5 transition-all text-sm text-gray-700 hover:text-primary"
                     >
                       {suggestion}
                     </button>
@@ -210,7 +211,7 @@ export default function ChatPage() {
                       {message.role === 'assistant' && (
                         <div className="flex items-center gap-2 mb-2">
                           <div className="w-6 h-6 bg-primary/10 rounded-full flex items-center justify-center text-sm">
-                            🤖
+                            <Icon icon="mingcute:ai-fill" className="text-xs text-primary" />
                           </div>
                           <span className="text-xs font-semibold text-primary">
                             RupaGen
@@ -243,35 +244,63 @@ export default function ChatPage() {
         </div>
 
         {/* Input Area */}
-        <div className="bg-white border-t border-gray-200 sticky bottom-0">
-          <div className="max-w-4xl mx-auto px-4 lg:px-6 py-4">
-            <form onSubmit={handleSendMessage} className="flex gap-3 items-end">
-              <textarea
-                ref={textareaRef}
-                value={inputMessage}
-                onChange={(e) => setInputMessage(e.target.value)}
-                onKeyPress={handleKeyPress}
-                placeholder="Ketik pesan Anda... (Enter untuk kirim, Shift+Enter untuk baris baru)"
-                disabled={sending}
-                rows={1}
-                className="flex-1 px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary resize-none disabled:bg-gray-100 disabled:cursor-not-allowed text-sm"
-                style={{ maxHeight: '200px', overflowY: 'auto' }}
-              />
-              <button
-                type="submit"
-                disabled={!inputMessage.trim() || sending}
-                className="px-5 py-3 bg-primary text-white rounded-xl font-medium hover:bg-primary/90 transition-colors disabled:bg-primary/50 disabled:cursor-not-allowed flex items-center gap-2"
-              >
-                {sending ? (
-                  <span className="animate-spin">⏳</span>
-                ) : (
-                  <Send size={18} />
-                )}
-              </button>
+        <div className="bg-linear-to-t from-gray-50 to-white border-t border-gray-200 sticky bottom-0 backdrop-blur-sm">
+          <div className="max-w-4xl mx-auto px-4 lg:px-6 py-6">
+            <form onSubmit={handleSendMessage} className="relative">
+              <div className="relative flex items-end gap-2 bg-white rounded-2xl border-2 border-gray-200 focus-within:border-primary/50 transition-all shadow-sm hover:shadow-md">
+                <textarea
+                  ref={textareaRef}
+                  value={inputMessage}
+                  onChange={(e) => setInputMessage(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                  placeholder="Ketik pesan Anda..."
+                  disabled={sending}
+                  rows={1}
+                  className="flex-1 px-5 py-4 bg-transparent focus:outline-none resize-none disabled:cursor-not-allowed text-sm placeholder:text-gray-400"
+                  style={{ maxHeight: '200px', overflowY: 'auto' }}
+                />
+                <div className="flex items-center gap-2 px-3 py-3">
+                  {/* Character/Action indicators */}
+                  <div className="flex items-center gap-2">
+                    {inputMessage.trim() && !sending && (
+                      <span className="text-xs text-gray-400 hidden sm:block">
+                        Enter ↵
+                      </span>
+                    )}
+                  </div>
+                  {/* Send Button */}
+                  <button
+                    type="submit"
+                    disabled={!inputMessage.trim() || sending}
+                    className="group relative p-3 bg-primary text-white rounded-xl font-medium hover:bg-primary/90 transition-all disabled:bg-gray-200 disabled:cursor-not-allowed shadow-sm hover:shadow-lg disabled:shadow-none transform hover:scale-105 disabled:scale-100"
+                    title={sending ? 'Mengirim...' : 'Kirim pesan'}
+                  >
+                    {sending ? (
+                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    ) : (
+                      <Send size={20} className="transition-transform group-hover:translate-x-0.5" />
+                    )}
+                  </button>
+                </div>
+              </div>
             </form>
-            <p className="text-xs text-gray-500 mt-2 text-center">
-              RupaGen AI dapat membuat kesalahan. Harap verifikasi informasi penting.
-            </p>
+            {/* Helper text with icons */}
+            <div className="flex items-center justify-between mt-3 px-2">
+              <p className="text-xs text-gray-400 flex items-center gap-1.5">
+                <Icon icon="material-symbols:info-outline" className="text-sm" />
+                RupaGen AI dapat membuat kesalahan. Harap verifikasi informasi penting.
+              </p>
+              <div className="hidden sm:flex items-center gap-3 text-xs text-gray-400">
+                <span className="flex items-center gap-1">
+                  <kbd className="px-2 py-0.5 bg-gray-100 border border-gray-300 rounded text-xs">Enter</kbd>
+                  Kirim
+                </span>
+                <span className="flex items-center gap-1">
+                  <kbd className="px-2 py-0.5 bg-gray-100 border border-gray-300 rounded text-xs">Shift + Enter</kbd>
+                  Baris baru
+                </span>
+              </div>
+            </div>
           </div>
         </div>
       </div>

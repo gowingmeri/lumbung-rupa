@@ -5,6 +5,7 @@ import { useRouter, usePathname } from 'next/navigation';
 import { getChatTitles, createChatTitle } from '@/services/rupagenService';
 import { ChatTitle } from '@/types/rupagen';
 import { Plus, MessageSquare, ChevronLeft, ChevronRight, Menu, X } from 'lucide-react';
+import { Icon } from '@iconify/react';
 
 export default function ChatSidebar() {
   const router = useRouter();
