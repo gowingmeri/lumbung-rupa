@@ -18,8 +18,6 @@ export interface DocumentModel {
   createdAt?: string
 }
 
-
-
 export interface UserModel {
   id: string;
   email: string;
