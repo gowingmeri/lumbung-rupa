@@ -79,7 +79,7 @@ const LicenseBuyerAuthLoginPage = () => {
           {/* Header */}
           <div className="p-5">
             <div className="flex items-center justify-center">
-              <h1 className="text-2xl justify-center font-semibold text-gray-900">
+              <h1 className="text-2xl justify-center font-medium text-gray-900">
                 Masuk atau Daftar Pembeli Lisensi
               </h1>
             </div>

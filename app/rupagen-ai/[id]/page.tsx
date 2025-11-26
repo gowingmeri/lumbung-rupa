@@ -176,14 +176,14 @@ export default function ChatPage() {
   }
 
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div className="flex h-screen bg-backgound">
       {/* Sidebar */}
       <ChatSidebar />
 
       {/* Main Chat Area */}
       <div className="flex-1 flex flex-col">
         {/* Header */}
-        <div className="bg-white border-b border-gray-200 sticky top-0 z-10">
+        <div className="bg-background border-b border-gray-200 sticky top-0 z-10">
           <div className="px-4 lg:px-6 py-4 flex items-center gap-4">
             {/* Back button - different routes based on role */}
             <button
@@ -286,7 +286,7 @@ export default function ChatPage() {
                             setInputMessage(prompt);
                             setTimeout(() => handleGenerateImage(), 100);
                           }}
-                          className="p-4 border border-purple-200 bg-purple-50 rounded-full hover:border-purple-400 hover:bg-purple-100 transition-all text-sm text-purple-700 hover:text-purple-900 flex items-center gap-2 justify-center"
+                          className="p-4 border border-black/15 bg-background rounded-full hover:border-purple-400 hover:bg-purple-100 transition-all text-sm text-purple-700 hover:text-purple-900 flex items-center gap-2 justify-center"
                         >
                           <Icon icon="material-symbols:image" className="text-sm" />
                           {prompt}

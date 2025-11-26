@@ -5,6 +5,7 @@ import Link from "next/link";
 import { products, Product } from "@/data/product";
 import Navbar from "@/components/Navbar";
 import { Trash2, Plus, Minus, ShoppingBag, ArrowRight } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface CartItem {
   productId: string;
@@ -121,40 +122,65 @@ const CartPage = () => {
       <Navbar />
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
+        <motion.div 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="flex items-center justify-between mb-8"
+        >
           <h1 className="text-3xl font-normal text-gray-900">Keranjang Lisensi</h1>
           {cartItems.length > 0 && (
-            <button
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
               onClick={clearCart}
               className="text-red-600 hover:text-red-800 font-medium"
             >
               Kosongkan Keranjang
-            </button>
+            </motion.button>
           )}
-        </div>
+        </motion.div>
 
         {cartItems.length === 0 ? (
           /* Empty Cart State */
-          <div className="text-center py-16">
-            <ShoppingBag size={64} className="mx-auto text-gray-300 mb-4" />
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5 }}
+            className="text-center py-16"
+          >
+            <motion.div
+              animate={{ y: [0, -10, 0] }}
+              transition={{ duration: 2, repeat: Infinity }}
+            >
+              <ShoppingBag size={64} className="mx-auto text-gray-300 mb-4" />
+            </motion.div>
             <h2 className="text-xl font-medium text-gray-900 mb-2">
               Keranjang Anda Kosong
             </h2>
             <p className="text-gray-600 mb-6">
               Mulai jelajahi koleksi aset budaya Indonesia untuk proyek B2B Anda
             </p>
-            <Link
-              href="/product"
-              className="inline-flex items-center px-6 py-3 bg-primary text-white rounded-full font-medium hover:bg-primary/90 transition-colors"
-            >
-              Jelajahi Katalog
-              <ArrowRight size={20} className="ml-2" />
+            <Link href="/product">
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="inline-flex items-center px-6 py-3 bg-primary text-white rounded-full font-medium hover:bg-primary/90 transition-colors cursor-pointer"
+              >
+                Jelajahi Katalog
+                <ArrowRight size={20} className="ml-2" />
+              </motion.div>
             </Link>
-          </div>
+          </motion.div>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Cart Items */}
-            <div className="lg:col-span-2">
+            <motion.div 
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5 }}
+              className="lg:col-span-2"
+            >
               <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
                 <div className="p-6 border-b border-gray-200">
                   <h2 className="text-xl font-medium text-gray-900">
@@ -163,7 +189,8 @@ const CartPage = () => {
                 </div>
                 
                 <div className="divide-y divide-gray-200">
-                  {cartItemsWithProducts.map((item) => {
+                  <AnimatePresence>
+                  {cartItemsWithProducts.map((item, index) => {
                     if (!item.product) return null;
                     
                     const licenseMultiplier = getLicenseMultiplier(item.licenseType);
@@ -171,10 +198,17 @@ const CartPage = () => {
                     const itemTotal = itemPrice * item.quantity;
 
                     return (
-                      <div key={item.productId} className="p-6">
+                      <motion.div 
+                        key={item.productId}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, x: -100 }}
+                        transition={{ duration: 0.3, delay: index * 0.1 }}
+                        className="p-6"
+                      >
                         <div className="flex items-start gap-4">
                           {/* Product Image */}
-                          <div className="w-24 h-24 rounded-xl overflow-hidden flex-shrink-0">
+                          <div className="w-24 h-24 rounded-xl overflow-hidden shrink-0">
                             <Image
                               src={item.product.thumbnail}
                               alt={item.product.title}
@@ -198,12 +232,14 @@ const CartPage = () => {
                                   oleh {item.product.creator}
                                 </p>
                               </div>
-                              <button
+                              <motion.button
+                                whileHover={{ scale: 1.1, rotate: 5 }}
+                                whileTap={{ scale: 0.9 }}
                                 onClick={() => removeFromCart(item.productId)}
                                 className="text-gray-400 hover:text-red-600 transition-colors p-1"
                               >
                                 <Trash2 size={18} />
-                              </button>
+                              </motion.button>
                             </div>
 
                             {/* License Type Selector */}
@@ -258,15 +294,21 @@ const CartPage = () => {
                             </div>
                           </div>
                         </div>
-                      </div>
+                      </motion.div>
                     );
                   })}
+                  </AnimatePresence>
                 </div>
               </div>
-            </div>
+            </motion.div>
 
             {/* Order Summary */}
-            <div className="lg:col-span-1">
+            <motion.div 
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className=\"lg:col-span-1\"
+            >
               <div className="bg-white rounded-2xl border border-gray-200 p-6 sticky top-8">
                 <h2 className="text-xl font-medium text-gray-900 mb-6">
                   Ringkasan Pesanan
@@ -289,9 +331,11 @@ const CartPage = () => {
                   </div>
                 </div>
 
-                <button className="w-full bg-primary text-white py-4 px-6 rounded-full font-medium hover:bg-primary/90 transition-colors mb-4">
-                  Proses Pembayaran
-                </button>
+                <motion.button 
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className=\"w-full bg-primary text-white py-4 px-6 rounded-full font-medium hover:bg-primary/90 transition-colors mb-4\"
+                >\n                  Proses Pembayaran\n                </motion.button>
 
                 <div className="text-center">
                   <Link
@@ -313,7 +357,7 @@ const CartPage = () => {
                   </ul>
                 </div>
               </div>
-            </div>
+            </motion.div>
           </div>
         )}
       </div>
