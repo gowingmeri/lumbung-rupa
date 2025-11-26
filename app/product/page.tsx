@@ -13,7 +13,7 @@ const ProductContent = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const categories = ["Motif", "Pola", "Aksara", "Ornamen", "Ilustrasi", "Texture", "Generatif"];
+  const categories = ["Batik", "Relief", "Wayang", "Ornamen", "Generatif"];
 
   // Load initial values from URL parameters
   useEffect(() => {
