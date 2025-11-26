@@ -1,7 +1,6 @@
 import localFont from "next/font/local";
 import type { Metadata } from "next";
-import "./globals.css"
-// import { SpeedInsights } from "@vercel/speed-insights/next";
+import "./globals.css";
 
 const generalSans = localFont({
   src: [
@@ -78,12 +77,12 @@ const generalSans = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Open Recruitment UTY Software House 2025",
+  title: "LumbungRupa",
   description:
-    "Bergabunglah dengan UTY Software House! Komunitas teknologi mahasiswa Universitas Teknologi Yogyakarta. Tingkatkan skill, bangun portofolio, dan berkolaborasi dalam proyek nyata. Posisi tersedia: Backend, Frontend, UI/UX, AI, QA, dan Non-IT.",
-  authors: [{ name: "UTY Software House Team" }],
-  creator: "UTY Software House",
-  publisher: "UTY Software House",
+    "LumbungRupa - Platform digital untuk mengelola dan berbagi sumber daya.",
+  authors: [{ name: "LumbungRupa Team" }],
+  creator: "LumbungRupa",
+  publisher: "LumbungRupa",
   icons: {
     icon: "/favicon/favicon.ico",
     shortcut: "/favicon/favicon.ico",
