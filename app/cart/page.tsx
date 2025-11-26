@@ -307,7 +307,7 @@ const CartPage = () => {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
-              className=\"lg:col-span-1\"
+              className="lg:col-span-1"
             >
               <div className="bg-white rounded-2xl border border-gray-200 p-6 sticky top-8">
                 <h2 className="text-xl font-medium text-gray-900 mb-6">
@@ -334,8 +334,10 @@ const CartPage = () => {
                 <motion.button 
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  className=\"w-full bg-primary text-white py-4 px-6 rounded-full font-medium hover:bg-primary/90 transition-colors mb-4\"
-                >\n                  Proses Pembayaran\n                </motion.button>
+                  className="w-full bg-primary text-white py-4 px-6 rounded-full font-medium hover:bg-primary/90 transition-colors mb-4"
+                >
+                  Proses Pembayaran
+                </motion.button>
 
                 <div className="text-center">
                   <Link
