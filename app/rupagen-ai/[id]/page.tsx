@@ -1,18 +1,17 @@
-'use client';
-
-import { useEffect, useState, useRef } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+"use client";
+import { useEffect, useState, useRef } from "react";
+import { useParams, useRouter } from "next/navigation";
 import {
   getChatHistory,
   sendMessage,
   parseAssistantContent,
   createChatTitle,
   generateImage,
-} from '@/services/rupagenService';
-import { ChatMessage } from '@/types/rupagen';
-import ChatSidebar from '@/components/ChatSidebar';
-import { Send, ArrowLeft } from 'lucide-react';
-import { Icon } from '@iconify/react';
+} from "@/services/rupagenService";
+import { ChatMessage } from "@/types/rupagen";
+import ChatSidebar from "@/components/ChatSidebar";
+import { Send, ArrowLeft } from "lucide-react";
+import { Icon } from "@iconify/react";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -22,7 +21,7 @@ export default function ChatPage() {
   const titleId = params.id as string;
 
   const [messages, setMessages] = useState<ChatMessage[]>([]);
-  const [inputMessage, setInputMessage] = useState('');
+  const [inputMessage, setInputMessage] = useState("");
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
   const [generatingImage, setGeneratingImage] = useState(false);
@@ -33,12 +32,12 @@ export default function ChatPage() {
 
   useEffect(() => {
     // Load user role from localStorage
-    const role = localStorage.getItem('roleUser');
+    const role = localStorage.getItem("roleUser");
     setUserRole(role);
   }, []);
 
   useEffect(() => {
-    if (titleId && titleId !== 'new') {
+    if (titleId && titleId !== "new") {
       loadChatHistory();
     } else {
       setLoading(false);
@@ -54,12 +53,12 @@ export default function ChatPage() {
   }, [inputMessage]);
 
   function scrollToBottom() {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }
 
   function adjustTextareaHeight() {
     if (textareaRef.current) {
-      textareaRef.current.style.height = 'auto';
+      textareaRef.current.style.height = "auto";
       textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 200)}px`;
     }
   }
@@ -71,8 +70,10 @@ export default function ChatPage() {
       const response = await getChatHistory(titleId);
       setMessages(response?.data?.messages || []);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Gagal memuat riwayat chat');
-      console.error('Error loading chat history:', err);
+      setError(
+        err instanceof Error ? err.message : "Gagal memuat riwayat chat",
+      );
+      console.error("Error loading chat history:", err);
       setMessages([]); // Reset messages on error
     } finally {
       setLoading(false);
@@ -85,11 +86,11 @@ export default function ChatPage() {
     if (!inputMessage.trim() || sending) return;
 
     const userMessage = inputMessage.trim();
-    setInputMessage('');
+    setInputMessage("");
 
     // Optimistically add user message
     const newUserMessage: ChatMessage = {
-      role: 'user',
+      role: "user",
       content: userMessage,
     };
     setMessages((prev) => [...prev, newUserMessage]);
@@ -100,7 +101,7 @@ export default function ChatPage() {
 
       // If this is a new chat, create it first
       let chatId = titleId;
-      if (titleId === 'new') {
+      if (titleId === "new") {
         const newChat = await createChatTitle();
         chatId = newChat._id;
         // Update URL without reload
@@ -112,8 +113,8 @@ export default function ChatPage() {
       // Update with full conversation from API
       setMessages(response?.data?.messages || []);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Gagal mengirim pesan');
-      console.error('Error sending message:', err);
+      setError(err instanceof Error ? err.message : "Gagal mengirim pesan");
+      console.error("Error sending message:", err);
       // Remove optimistic message on error
       setMessages((prev) => prev.slice(0, -1));
     } finally {
@@ -125,11 +126,11 @@ export default function ChatPage() {
     if (!inputMessage.trim() || generatingImage) return;
 
     const prompt = inputMessage.trim();
-    setInputMessage('');
+    setInputMessage("");
 
     // Add user message
     const userMessage: ChatMessage = {
-      role: 'user',
+      role: "user",
       content: `🎨 Generate image: ${prompt}`,
     };
     setMessages((prev) => [...prev, userMessage]);
@@ -139,16 +140,16 @@ export default function ChatPage() {
       setError(null);
 
       const result = await generateImage(prompt);
-      
+
       // Add assistant message with image
       const assistantMessage: ChatMessage = {
-        role: 'assistant',
+        role: "assistant",
         content: `IMAGE:${result.url}`,
       };
       setMessages((prev) => [...prev, assistantMessage]);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Gagal membuat gambar');
-      console.error('Error generating image:', err);
+      setError(err instanceof Error ? err.message : "Gagal membuat gambar");
+      console.error("Error generating image:", err);
       // Remove optimistic message on error
       setMessages((prev) => prev.slice(0, -1));
     } finally {
@@ -158,20 +159,20 @@ export default function ChatPage() {
 
   function handleLicenseAsset(imageUrl: string) {
     // Handle license for CULTURAL_PARTNER
-    console.log('Lisensikan aset:', imageUrl);
+    console.log("Lisensikan aset:", imageUrl);
     // TODO: Implement license logic
-    alert('Fitur lisensikan aset akan segera tersedia');
+    alert("Fitur lisensikan aset akan segera tersedia");
   }
 
   function handleBuyLicense(imageUrl: string) {
     // Handle buy license for LICENSE_BUYER
-    console.log('Beli lisensi:', imageUrl);
+    console.log("Beli lisensi:", imageUrl);
     // TODO: Implement buy license logic
-    alert('Fitur beli lisensi akan segera tersedia');
+    alert("Fitur beli lisensi akan segera tersedia");
   }
 
   function handleKeyPress(e: React.KeyboardEvent<HTMLTextAreaElement>) {
-    if (e.key === 'Enter' && !e.shiftKey) {
+    if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSendMessage(e as any);
     }
@@ -190,32 +191,39 @@ export default function ChatPage() {
             {/* Back button - different routes based on role */}
             <button
               onClick={() => {
-                if (userRole === 'CULTURAL_PARTNER') {
-                  router.push('/cultural-partner/dashboard');
-                } else if (userRole === 'LICENSE_BUYER') {
-                  router.push('/product');
+                if (userRole === "CULTURAL_PARTNER") {
+                  router.push("/cultural-partner/dashboard");
+                } else if (userRole === "LICENSE_BUYER") {
+                  router.push("/product");
                 } else {
-                  router.push('/');
+                  router.push("/");
                 }
               }}
               className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
               title={
-                userRole === 'CULTURAL_PARTNER'
-                  ? 'Kembali ke Dashboard'
-                  : userRole === 'LICENSE_BUYER'
-                  ? 'Kembali ke Product'
-                  : 'Kembali ke Beranda'
+                userRole === "CULTURAL_PARTNER"
+                  ? "Kembali ke Dashboard"
+                  : userRole === "LICENSE_BUYER"
+                    ? "Kembali ke Product"
+                    : "Kembali ke Beranda"
               }
             >
               <ArrowLeft size={20} className="text-gray-700" />
             </button>
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-full flex items-center justify-center">
-                <Icon icon="mingcute:ai-fill" className="w-20 h-20 text-xl text-primary" />
+                <Icon
+                  icon="mingcute:ai-fill"
+                  className="w-20 h-20 text-xl text-primary"
+                />
               </div>
               <div>
-                <h1 className="text-lg font-semibold text-gray-900">RupaGen AI</h1>
-                <p className="text-xs text-gray-500">Asisten Pintar LumbungRupa</p>
+                <h1 className="text-lg font-semibold text-gray-900">
+                  RupaGen AI
+                </h1>
+                <p className="text-xs text-gray-500">
+                  Asisten Pintar LumbungRupa
+                </p>
               </div>
             </div>
           </div>
@@ -243,7 +251,10 @@ export default function ChatPage() {
             ) : messages.length === 0 ? (
               <div className="text-center py-12">
                 <div className="w-32 h-32 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Icon icon="mingcute:ai-fill" className="text-6xl text-primary w-44 h-44" />
+                  <Icon
+                    icon="mingcute:ai-fill"
+                    className="text-6xl text-primary w-44 h-44"
+                  />
                 </div>
                 <h2 className="text-2xl font-semibold text-gray-900 mb-2">
                   Mulai Percakapan
@@ -255,10 +266,10 @@ export default function ChatPage() {
                   {/* Chat suggestions */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-left">
                     {[
-                      'Ceritakan tentang LumbungRupa',
-                      'Bagaimana cara menggunakan aplikasi ini?',
-                      'Apa saja fitur yang tersedia?',
-                      'Bantuan untuk pengguna baru',
+                      "Ceritakan tentang LumbungRupa",
+                      "Bagaimana cara menggunakan aplikasi ini?",
+                      "Apa saja fitur yang tersedia?",
+                      "Bantuan untuk pengguna baru",
                     ].map((suggestion, idx) => (
                       <button
                         key={idx}
@@ -272,15 +283,18 @@ export default function ChatPage() {
                   {/* Image generation suggestions */}
                   <div className="pt-4 border-t border-gray-200">
                     <p className="text-sm text-gray-500 mb-3 flex items-center gap-2 justify-center">
-                      <Icon icon="material-symbols:image" className="text-purple-600" />
+                      <Icon
+                        icon="material-symbols:image"
+                        className="text-purple-600"
+                      />
                       Atau generate desain batik:
                     </p>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                       {[
-                        'megamendung blue gold modern',
-                        'kawung red traditional elegant',
-                        'parang green contemporary',
-                        'truntum pink soft modern',
+                        "megamendung blue gold modern",
+                        "kawung red traditional elegant",
+                        "parang green contemporary",
+                        "truntum pink soft modern",
                       ].map((prompt, idx) => (
                         <button
                           key={idx}
@@ -290,7 +304,10 @@ export default function ChatPage() {
                           }}
                           className="p-4 border border-black/15 bg-background rounded-full hover:border-purple-400 hover:bg-purple-100 transition-all text-sm text-purple-700 hover:text-purple-900 flex items-center gap-2 justify-center"
                         >
-                          <Icon icon="material-symbols:image" className="text-sm" />
+                          <Icon
+                            icon="material-symbols:image"
+                            className="text-sm"
+                          />
                           {prompt}
                         </button>
                       ))}
@@ -304,20 +321,23 @@ export default function ChatPage() {
                   <div
                     key={index}
                     className={`flex ${
-                      message.role === 'user' ? 'justify-end' : 'justify-start'
+                      message.role === "user" ? "justify-end" : "justify-start"
                     }`}
                   >
                     <div
                       className={`max-w-[85%] md:max-w-[75%] rounded-2xl px-4 py-3 ${
-                        message.role === 'user'
-                          ? 'bg-primary text-white'
-                          : 'bg-white border border-gray-200 text-gray-900 shadow-sm'
+                        message.role === "user"
+                          ? "bg-primary text-white"
+                          : "bg-white border border-gray-200 text-gray-900 shadow-sm"
                       }`}
                     >
-                      {message.role === 'assistant' && (
+                      {message.role === "assistant" && (
                         <div className="flex items-center gap-2 mb-2">
                           <div className="w-6 h-6 bg-primary/10 rounded-full flex items-center justify-center text-sm">
-                            <Icon icon="mingcute:ai-fill" className="text-xs text-primary" />
+                            <Icon
+                              icon="mingcute:ai-fill"
+                              className="text-xs text-primary"
+                            />
                           </div>
                           <span className="text-xs font-semibold text-primary">
                             RupaGen
@@ -325,35 +345,50 @@ export default function ChatPage() {
                         </div>
                       )}
                       <div className="whitespace-pre-wrap wrap-break-word text-sm leading-relaxed">
-                        {message.role === 'assistant' ? (
-                          message.content.startsWith('IMAGE:') ? (
+                        {message.role === "assistant" ? (
+                          message.content.startsWith("IMAGE:") ? (
                             <div className="mt-2 space-y-3">
                               <img
-                                src={`${API_BASE_URL}${message.content.replace('IMAGE:', '')}`}
+                                src={`${API_BASE_URL}${message.content.replace("IMAGE:", "")}`}
                                 alt="Generated batik design"
                                 className="rounded-xl max-w-full h-auto shadow-lg"
                                 onError={(e) => {
-                                  e.currentTarget.style.display = 'none';
-                                  e.currentTarget.parentElement!.innerHTML = '<p class="text-red-500 text-sm">Gagal memuat gambar</p>';
+                                  e.currentTarget.style.display = "none";
+                                  e.currentTarget.parentElement!.innerHTML =
+                                    '<p class="text-red-500 text-sm">Gagal memuat gambar</p>';
                                 }}
                               />
                               {/* Action buttons based on user role */}
                               {userRole && (
                                 <div className="flex gap-2 pt-2">
-                                  {userRole === 'CULTURAL_PARTNER' ? (
+                                  {userRole === "CULTURAL_PARTNER" ? (
                                     <button
-                                      onClick={() => handleLicenseAsset(message.content.replace('IMAGE:', ''))}
+                                      onClick={() =>
+                                        handleLicenseAsset(
+                                          message.content.replace("IMAGE:", ""),
+                                        )
+                                      }
                                       className="flex-1 px-4 py-2.5 bg-primary text-white rounded-xl font-medium hover:bg-primary/90 transition-all shadow-sm hover:shadow-md flex items-center justify-center gap-2"
                                     >
-                                      <Icon icon="material-symbols:upload" className="text-lg" />
+                                      <Icon
+                                        icon="material-symbols:upload"
+                                        className="text-lg"
+                                      />
                                       Lisensikan Aset Ini
                                     </button>
-                                  ) : userRole === 'LICENSE_BUYER' ? (
+                                  ) : userRole === "LICENSE_BUYER" ? (
                                     <button
-                                      onClick={() => handleBuyLicense(message.content.replace('IMAGE:', ''))}
+                                      onClick={() =>
+                                        handleBuyLicense(
+                                          message.content.replace("IMAGE:", ""),
+                                        )
+                                      }
                                       className="flex-1 px-4 py-2.5 bg-primary text-white rounded-xl font-medium hover:bg-primary/90 transition-all shadow-sm hover:shadow-md flex items-center justify-center gap-2"
                                     >
-                                      <Icon icon="material-symbols:shopping-cart" className="text-lg" />
+                                      <Icon
+                                        icon="material-symbols:shopping-cart"
+                                        className="text-lg"
+                                      />
                                       Beli Lisensi Aset Ini
                                     </button>
                                   ) : null}
@@ -391,7 +426,9 @@ export default function ChatPage() {
                         <div className="w-2 h-2 bg-primary rounded-full animate-bounce delay-100"></div>
                         <div className="w-2 h-2 bg-primary rounded-full animate-bounce delay-200"></div>
                         {generatingImage && (
-                          <span className="text-xs text-gray-500 ml-2">Membuat gambar...</span>
+                          <span className="text-xs text-gray-500 ml-2">
+                            Membuat gambar...
+                          </span>
                         )}
                       </div>
                     </div>
@@ -417,7 +454,7 @@ export default function ChatPage() {
                   disabled={sending}
                   rows={1}
                   className="flex-1 px-5 py-4 bg-transparent focus:outline-none resize-none disabled:cursor-not-allowed text-sm placeholder:text-gray-400"
-                  style={{ maxHeight: '200px', overflowY: 'auto' }}
+                  style={{ maxHeight: "200px", overflowY: "auto" }}
                 />
                 <div className="flex items-center gap-2 px-3 py-3">
                   {/* Character/Action indicators */}
@@ -432,9 +469,15 @@ export default function ChatPage() {
                   <button
                     type="button"
                     onClick={handleGenerateImage}
-                    disabled={!inputMessage.trim() || sending || generatingImage}
+                    disabled={
+                      !inputMessage.trim() || sending || generatingImage
+                    }
                     className="group relative p-3 bg-purple-600 text-white rounded-xl font-medium hover:bg-purple-700 transition-all disabled:bg-gray-200 disabled:cursor-not-allowed shadow-sm hover:shadow-lg disabled:shadow-none transform hover:scale-105 disabled:scale-100"
-                    title={generatingImage ? 'Membuat gambar...' : 'Generate gambar batik'}
+                    title={
+                      generatingImage
+                        ? "Membuat gambar..."
+                        : "Generate gambar batik"
+                    }
                   >
                     {generatingImage ? (
                       <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
@@ -445,14 +488,19 @@ export default function ChatPage() {
                   {/* Send Button */}
                   <button
                     type="submit"
-                    disabled={!inputMessage.trim() || sending || generatingImage}
+                    disabled={
+                      !inputMessage.trim() || sending || generatingImage
+                    }
                     className="group relative p-3 bg-primary text-white rounded-xl font-medium hover:bg-primary/90 transition-all disabled:bg-gray-200 disabled:cursor-not-allowed shadow-sm hover:shadow-lg disabled:shadow-none transform hover:scale-105 disabled:scale-100"
-                    title={sending ? 'Mengirim...' : 'Kirim pesan'}
+                    title={sending ? "Mengirim..." : "Kirim pesan"}
                   >
                     {sending ? (
                       <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
                     ) : (
-                      <Send size={20} className="transition-transform group-hover:translate-x-0.5" />
+                      <Send
+                        size={20}
+                        className="transition-transform group-hover:translate-x-0.5"
+                      />
                     )}
                   </button>
                 </div>
@@ -461,8 +509,12 @@ export default function ChatPage() {
             {/* Helper text with icons */}
             <div className="flex items-center justify-between mt-3 px-2">
               <p className="text-xs text-gray-400 flex items-center gap-1.5">
-                <Icon icon="material-symbols:info-outline" className="text-sm" />
-                RupaGen AI dapat membuat kesalahan. Harap verifikasi informasi penting.
+                <Icon
+                  icon="material-symbols:info-outline"
+                  className="text-sm"
+                />
+                RupaGen AI dapat membuat kesalahan. Harap verifikasi informasi
+                penting.
               </p>
               <div className="hidden sm:flex items-center gap-3 text-xs text-gray-400">
                 <span className="flex items-center gap-1.5 text-purple-600">
@@ -471,11 +523,15 @@ export default function ChatPage() {
                 </span>
                 <span className="text-gray-300">|</span>
                 <span className="flex items-center gap-1">
-                  <kbd className="px-2 py-0.5 bg-gray-100 border border-gray-300 rounded text-xs">Enter</kbd>
+                  <kbd className="px-2 py-0.5 bg-gray-100 border border-gray-300 rounded text-xs">
+                    Enter
+                  </kbd>
                   Kirim
                 </span>
                 <span className="flex items-center gap-1">
-                  <kbd className="px-2 py-0.5 bg-gray-100 border border-gray-300 rounded text-xs">Shift + Enter</kbd>
+                  <kbd className="px-2 py-0.5 bg-gray-100 border border-gray-300 rounded text-xs">
+                    Shift + Enter
+                  </kbd>
                   Baris baru
                 </span>
               </div>
