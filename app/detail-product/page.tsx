@@ -188,9 +188,27 @@ const DetailProductContent = () => {
               {product.title}
             </h1>
 
-            <p className="text-gray-600 mb-6 leading-relaxed">
-              {product.description}
-            </p>
+            <div className="text-gray-600 mb-6 leading-relaxed space-y-4">
+              {product.kategori === "Wayang" ? (
+                <p>
+                  <span className="font-semibold text-gray-900">Golongan:</span>{" "}
+                  {product.golongan || product.asalDaerah}
+                </p>
+              ) : (
+                <p>
+                  <span className="font-semibold text-gray-900">Asal Daerah:</span>{" "}
+                  {product.asalDaerah}
+                </p>
+              )}
+              <p>
+                <span className="font-semibold text-gray-900">Sejarah Ringkas:</span>{" "}
+                {product.sejarahRingkas}
+              </p>
+              <p>
+                <span className="font-semibold text-gray-900">Makna Filosofis:</span>{" "}
+                {product.maknaFilosofis}
+              </p>
+            </div>
 
             {/* Creator Info */}
             <div className="mb-6">
