@@ -4,6 +4,7 @@ import { Search } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { products } from "@/data/product";
 
 const Hero = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -81,53 +82,33 @@ const Hero = () => {
           </div>
         </div>
 
-        {/* Categories Section */}
+        {/* Product Carousel Section (replaces Categories) */}
         <div className="mb-8">
           <h2 className="text-2xl md:text-3xl font-normal text-gray-900 mb-8 text-center">
             Kategori Aset Budaya
           </h2>
-          
-          {/* Category Horizontal Scroll Container */}
-          <div className="w-full overflow-hidden">
-            <div className="flex gap-4 animate-scroll">
-              {/* First set of categories */}
-              {categories.map((category) => (
-                <div key={category.id} className="relative group flex-shrink-0">
-                  <button 
-                    onClick={() => handleCategoryClick(category.name)}
-                    className="p-5 border border-black/15 rounded-full transition-all duration-200 hover:border-primary hover:shadow-lg hover:bg-primary/5 whitespace-nowrap"
+
+          {/* Horizontal Scroll Container - product thumbnails from data/product.ts */}
+          <div className="border-t border-black/15 relative overflow-hidden">
+            <div className="flex gap-10 animate-scroll px-5 py-10">
+              {(() => {
+                const items = products.slice(0, 12);
+                const duplicated = [...items, ...items];
+                return duplicated.map((property, index) => (
+                  <div
+                    key={index}
+                    className="flex flex-col justify-center items-center w-[400px] flex-shrink-0"
                   >
-                    <h3 className="font-normal text-lg text-gray-900 group-hover:text-primary transition-colors">
-                      {category.name}
-                    </h3>
-                  </button>
-                  
-                  {/* Hover Description Tooltip */}
-                  <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-sm rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 whitespace-nowrap z-10 pointer-events-none">
-                    {category.description}
-                    <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-gray-900"></div>
+                    <img
+                      className="rounded-3xl w-full h-[360px] object-cover"
+                      src={property.thumbnail}
+                      alt={property.title}
+                    />
+                    <h1 className="mt-2 font-semibold">{property.title}</h1>
+                    <p className="text-gray-500">{property.kategori}</p>
                   </div>
-                </div>
-              ))}
-              {/* Duplicate set for seamless loop */}
-              {categories.map((category) => (
-                <div key={`${category.id}-duplicate`} className="relative group flex-shrink-0">
-                  <button 
-                    onClick={() => handleCategoryClick(category.name)}
-                    className="p-5 border border-black/15 rounded-full transition-all duration-200 hover:border-primary hover:shadow-lg hover:bg-primary/5 whitespace-nowrap"
-                  >
-                    <h3 className="font-normal text-lg text-gray-900 group-hover:text-primary transition-colors">
-                      {category.name}
-                    </h3>
-                  </button>
-                  
-                  {/* Hover Description Tooltip */}
-                  <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-sm rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 whitespace-nowrap z-10 pointer-events-none">
-                    {category.description}
-                    <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-gray-900"></div>
-                  </div>
-                </div>
-              ))}
+                ));
+              })()}
             </div>
           </div>
         </div>
